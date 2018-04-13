@@ -78,7 +78,6 @@ class PiRanha:
         if r.status_code > 200:
             logging.fatal('Unable to get application details')
             sys.exit(-1)
-        print(r.json())
         self.application = r.json()
         return self.application
 
@@ -140,7 +139,7 @@ class PiRanha:
     def start_tranparent_routing(self):
         cmd = 'sh /usr/share/PiRogue/proxy/transparent.sh'
         try:
-            subprocess.check_call(cmd, shell = True)
+            subprocess.check_call(cmd, shell = True, stdout = subprocess.PIPE)
         except:
             logging.fatal('Unable to start transparent routing')
             sys.exit(-1)
@@ -148,7 +147,7 @@ class PiRanha:
     def stop_tranparent_routing(self):
         cmd = 'sh /usr/share/PiRogue/proxy/stop_transparent.sh'
         try:
-            subprocess.check_call(cmd, shell = True)
+            subprocess.check_call(cmd, shell = True, stdout = subprocess.PIPE)
         except:
             logging.fatal('Unable to stop transparent routing')
             sys.exit(-1)

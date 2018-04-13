@@ -1,6 +1,7 @@
 import os
 import signal
 import time
+from sys import stderr
 
 from utils import *
 
@@ -25,7 +26,7 @@ class TCPDump:
 
     def start(self):
         cmd = "tcpdump -U -w %s -i %s %s" % (self.config.pcap_output, self.config.iface, self.config.tcpdump_filter)
-        self.p_tcpdump = sp.Popen(cmd, stdout = sp.PIPE, shell = True)
+        self.p_tcpdump = sp.Popen(cmd, stdout = sp.PIPE, stderr = sp.PIPE, shell = True)
         time.sleep(5)
 
     def stop(self):

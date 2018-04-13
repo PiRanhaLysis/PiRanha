@@ -108,6 +108,10 @@ class ADB:
             return None
         return output.strip()
 
+    def reboot(self):
+        cmd = '%s reboot %s' % (self.adb_bin)
+        return os_run(cmd) == 0
+
     def disconnect(self, ip):
         cmd = '%s disconnect %s' % (self.adb_bin, ip)
         return os_run(cmd) == 0

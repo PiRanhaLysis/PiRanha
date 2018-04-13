@@ -80,3 +80,6 @@ if __name__ == '__main__':
                 # Do nothing
                 sys.exit(0)
 
+            adb.reboot()
+            sys.exit(0)
+
