@@ -45,7 +45,7 @@ class ADB:
     def set_date_time(self):
         d = datetime.now()
         cmd = '%s shell  \'su -c "date -u %s" ; su -c "am broadcast -a android.intent.action.TIME_SET"\'  ' % (
-        self.adb_bin, d.strftime('%m%d%H%M'))
+            self.adb_bin, d.strftime('%m%d%H%M'))
         return os_run(cmd) == 0
 
     def get_props(self):
@@ -67,7 +67,12 @@ class ADB:
         return output.strip()
 
     def get_imei(self):
-        cmd = '%s shell service call iphonesubinfo 1 |awk -F "\'" \'{print $2}\'|sed \'1 d\'|tr -d \'.\'|awk \'{print}\' ORS=|awk \'{print $1}\'' % (self.adb_bin)
+        version = self.get_android_version()
+        major = int(version.split('.')[0])
+        cmd = '%s shell dumpsys iphonesubinfo | grep "Device ID" | awk \'{print $4}\'' % (self.adb_bin)
+        if major <= 5:
+            cmd = '%s shell service call iphonesubinfo 1 |awk -F "\'" \'{print $2}\'|sed \'1 d\'|tr -d \'.\'|awk \'{print}\' ORS=|awk \'{print $1}\'' % (
+            self.adb_bin)
         try:
             output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
         except:
@@ -76,7 +81,7 @@ class ADB:
         return output.strip()
 
     def get_android_id(self):
-        cmd = '%s shell settings get secure android_id' % (self.adb_bin)
+        cmd = '%s shell settings get secure android_id | tail -n1' % (self.adb_bin)
         try:
             output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
         except:
@@ -84,8 +89,18 @@ class ADB:
             return None
         return output.strip()
 
+    def get_android_version(self):
+        cmd = '%s shell getprop ro.build.version.release | tail -n1' % (self.adb_bin)
+        try:
+            output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
+        except:
+            logging.error('Unable to get android version')
+            return None
+        return output.strip()
+
     def get_phone_number(self):
-        cmd = '%s shell service call iphonesubinfo 17 |awk -F "\'" \'{print $2}\'|sed \'1 d\'|tr -d \'.\'|awk \'{print}\' ORS=|awk \'{print $1}\'' % (self.adb_bin)
+        cmd = '%s shell service call iphonesubinfo 17 |awk -F "\'" \'{print $2}\'|sed \'1 d\'|tr -d \'.\'|awk \'{print}\' ORS=|awk \'{print $1}\'' % (
+        self.adb_bin)
         try:
             output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
         except:

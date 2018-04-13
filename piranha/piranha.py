@@ -23,9 +23,7 @@ if __name__ == '__main__':
     adb = ADB(options.adb_path)
 
     if options.register_smartphone:
-        if options.brand is None or len(options.brand.strip()) == 0:
-            logging.error('You must set -b option for smartphone brand name')
-            sys.exit(-1)
+        input('Connect the smartphone to the PiRogue and press [enter]: ')
         brand = input('Enter the brand name of the smartphone and press [enter]: ')
         p.register_smartphone(adb, brand = brand)
 
@@ -38,6 +36,7 @@ if __name__ == '__main__':
             # Download APK
             apk_path = p.download_apk(tmp, experiment)
             # Verify connected smartphone meets experiment requirements
+            input('Connect the smartphone to the PiRogue and press [enter]: ')
             application = p.get_application(experiment)
             p.check_smartphone(adb, experiment)
             # Create a new session
@@ -61,6 +60,9 @@ if __name__ == '__main__':
             p.start_tranparent_routing()
             tcpdump.start()
             mitmproxy.start()
+            input('Install the CA by browsing http://mitm.it and press [enter]: ')
+            # Start the application
+            adb.run(application['handle'])
 
             # Wait until stop if received
             cmd = input('Type "stop" or "cancel" and press [enter]: ')

@@ -29,10 +29,13 @@ class TCPDump:
         time.sleep(5)
 
     def stop(self):
-        self.p_tcpdump.send_signal(signal.SIGINT)
-        os.killpg(os.getpgid(self.p_tcpdump.pid), signal.SIGINT)
-        time.sleep(4)
-        self.p_tcpdump.kill()
+        try:
+            self.p_tcpdump.send_signal(signal.SIGINT)
+            time.sleep(15)
+            os.killpg(os.getpgid(self.p_tcpdump.pid), signal.SIGINT)
+            self.p_tcpdump.kill()
+        except:
+            pass
 
 
 class MITMProxy:
@@ -46,7 +49,10 @@ class MITMProxy:
         time.sleep(5)
 
     def stop(self):
-        self.p_mitmproxy.send_signal(signal.SIGINT)
-        os.killpg(os.getpgid(self.p_mitmproxy.pid), signal.SIGINT)
-        time.sleep(4)
-        self.p_mitmproxy.kill()
+        try:
+            self.p_mitmproxy.send_signal(signal.SIGINT)
+            time.sleep(15)
+            os.killpg(os.getpgid(self.p_mitmproxy.pid), signal.SIGINT)
+            self.p_mitmproxy.kill()
+        except:
+            pass

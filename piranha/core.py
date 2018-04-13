@@ -146,7 +146,7 @@ class PiRanha:
             sys.exit(-1)
 
     def stop_tranparent_routing(self):
-        cmd = 'sh /usr/share/PiRogue/proxy/stop-transparent.sh'
+        cmd = 'sh /usr/share/PiRogue/proxy/stop_transparent.sh'
         try:
             subprocess.check_call(cmd, shell = True)
         except:
