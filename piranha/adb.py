@@ -26,6 +26,14 @@ class ADB:
         cmd = '%s install %s' % (self.adb_bin, apk)
         return os_run(cmd) == 0
 
+    def uninstall(self, handle):
+        cmd = '%s shell pm uninstall -k %s' % (self.adb_bin, handle)
+        return os_run(cmd) == 0
+
+    def kill(self, handle):
+        cmd = '%s shell am force-stop %s' % (self.adb_bin, handle)
+        return os_run(cmd) == 0
+
     def grant(self, handle, permission):
         cmd = '%s shell pm grant %s %s' % (self.adb_bin, handle, permission)
         return os_run(cmd) == 0
@@ -51,6 +59,33 @@ class ADB:
 
     def get_property(self, property):
         cmd = '%s shell getprop %s' % (self.adb_bin, property)
+        try:
+            output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
+        except:
+            logging.error('Unable to get smartphone property')
+            return None
+        return output.strip()
+
+    def get_imei(self):
+        cmd = '%s shell service call iphonesubinfo 1 |awk -F "\'" \'{print $2}\'|sed \'1 d\'|tr -d \'.\'|awk \'{print}\' ORS=|awk \'{print $1}\'' % (self.adb_bin)
+        try:
+            output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
+        except:
+            logging.error('Unable to get smartphone IMEI')
+            return None
+        return output.strip()
+
+    def get_android_id(self):
+        cmd = '%s shell settings get secure android_id' % (self.adb_bin)
+        try:
+            output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
+        except:
+            logging.error('Unable to get android ID')
+            return None
+        return output.strip()
+
+    def get_phone_number(self):
+        cmd = '%s shell service call iphonesubinfo 17 |awk -F "\'" \'{print $2}\'|sed \'1 d\'|tr -d \'.\'|awk \'{print}\' ORS=|awk \'{print $1}\'' % (self.adb_bin)
         try:
             output = subprocess.check_output(cmd, shell = True, universal_newlines = True)
         except:
