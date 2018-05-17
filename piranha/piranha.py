@@ -1,4 +1,3 @@
-import sys
 import tempfile
 from optparse import OptionParser
 
@@ -25,6 +24,7 @@ if __name__ == '__main__':
     if options.register_smartphone:
         input('Connect the smartphone to the PiRogue and press [enter]: ')
         brand = input('Enter the brand name of the smartphone and press [enter]: ')
+        #Todo add mac addresses
         p.register_smartphone(adb, brand = brand)
 
     if options.experiment_id is not None:
@@ -60,7 +60,7 @@ if __name__ == '__main__':
             p.start_tranparent_routing()
             tcpdump.start()
             mitmproxy.start()
-            input('Install the CA by browsing http://mitm.it and press [enter]: ')
+            input('Install the CA by browsing http://mitm.it and press [enter] to run the application: ')
             # Start the application
             adb.run(application['handle'])
 
