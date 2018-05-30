@@ -69,8 +69,9 @@ class ADB:
     def get_imei(self):
         version = self.get_android_version()
         major = int(version.split('.')[0])
+        
         cmd = '%s shell dumpsys iphonesubinfo | grep "Device ID" | awk \'{print $4}\'' % (self.adb_bin)
-        if major <= 5:
+        if major >= 5:
             cmd = '%s shell service call iphonesubinfo 1 |awk -F "\'" \'{print $2}\'|sed \'1 d\'|tr -d \'.\'|awk \'{print}\' ORS=|awk \'{print $1}\'' % (
             self.adb_bin)
         try:
@@ -109,7 +110,7 @@ class ADB:
         return output.strip()
 
     def reboot(self):
-        cmd = '%s reboot %s' % (self.adb_bin)
+        cmd = '%s reboot' % (self.adb_bin)
         return os_run(cmd) == 0
 
     def disconnect(self, ip):
