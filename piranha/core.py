@@ -19,6 +19,7 @@ class PiRanha:
         self.experiment = None
         self.application = None
         self.apk_path = None
+        self.auth_header = {'Authorization': 'Token %s' % self.access_token}
         logging.basicConfig(level = logging.INFO, format = 'PiRanha - %(levelname)s: %(message)s')
 
     def register_smartphone(self, adb, brand):
@@ -49,7 +50,7 @@ class PiRanha:
             'raw_parameters': props
         }
         url = '%s/api/smartphone' % self.host
-        r = requests.post(url, json.dumps(smartphone))
+        r = requests.post(url, json.dumps(smartphone), headers=self.auth_header)
         if r.status_code > 210:
             if ' already exists' in r.text:
                 logging.info('⚠️ smartphone already registered')
@@ -63,7 +64,7 @@ class PiRanha:
         if self.experiment is not None:
             return self.experiment
         url = '%s/api/experiment/%s/' % (self.host, experiment_id)
-        r = requests.get(url)
+        r = requests.get(url, headers=self.auth_header)
         if r.status_code > 200:
             logging.fatal('Unable to get experiment details')
             sys.exit(-1)
@@ -74,7 +75,7 @@ class PiRanha:
         if self.application is not None:
             return self.application
         url = '%s/api/application/%s/' % (self.host, experiment['application'])
-        r = requests.get(url)
+        r = requests.get(url, headers=self.auth_header)
         if r.status_code > 200:
             logging.fatal('Unable to get application details')
             sys.exit(-1)
@@ -129,7 +130,7 @@ class PiRanha:
             'name': name,
             'experiment': experiment['id']
         }
-        r = requests.post(url, json.dumps(session))
+        r = requests.post(url, json.dumps(session), headers=self.auth_header)
         if r.status_code != 201:
             logging.fatal('Unable to create the session')
             sys.exit(-1)

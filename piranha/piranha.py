@@ -1,11 +1,13 @@
 import tempfile
 from optparse import OptionParser
-
+import configparser
 from adb import *
 from core import *
 from network import TCPDumpConfig, MITMProxyConfig, TCPDump, MITMProxy
 
 if __name__ == '__main__':
+    CONFIG_FILE = '/usr/share/PiRanha/.config' 
+    
     parser = OptionParser()
     parser.add_option('-r', '--register-smartphone', action = 'store_true', dest = 'register_smartphone',
                       default = False, help = 'register a new connected smartphone')
@@ -17,7 +19,12 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
 
-    p = PiRanha(options.base_url, 'dsfs')
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FILE)
+
+    auth_token = config['DEFAULT']['token']
+
+    p = PiRanha(config['DEFAULT']['host'], auth_token)
 
     adb = ADB(options.adb_path)
 
