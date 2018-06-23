@@ -41,7 +41,7 @@ source venv/bin/activate
 python piranha/piranha.py -r
 ```
 
-### Register run an experimentation
+### Run an experimentation
 ```
 cd /usr/share/PiRanha
 source venv/bin/activate
