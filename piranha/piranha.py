@@ -23,6 +23,7 @@ if __name__ == '__main__':
     config.read(CONFIG_FILE)
 
     auth_token = config['DEFAULT']['token']
+    network_interface = config['DEFAULT']['iface']
 
     p = PiRanha(config['DEFAULT']['host'], auth_token)
 
@@ -56,7 +57,7 @@ if __name__ == '__main__':
             # Prepare tcpdump
             pcap_name = '%s.pcap' % session['id']
             pcap_path = os.path.join(tmp, pcap_name)
-            tcpdump_configuration = TCPDumpConfig(pcap_path, 'wlan1')
+            tcpdump_configuration = TCPDumpConfig(pcap_path, network_interface)
             tcpdump = TCPDump(tcpdump_configuration)
             # Prepare mitmproxy
             flow_name = '%s.flow' % session['id']
