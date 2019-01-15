@@ -32,6 +32,7 @@ First of all, you have to create a configuration file `/usr/share/PiRanha/.confi
 [DEFAULT]
 host = http://localhost:8081
 token = my_PiPrecious_access_token
+iface = wlan1
 ```
 
 ### Register a smartphone
