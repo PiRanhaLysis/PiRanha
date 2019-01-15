@@ -42,18 +42,23 @@ if __name__ == '__main__':
 
         with tempfile.TemporaryDirectory() as tmp:
             # Download APK
-            apk_path = p.download_apk(tmp, experiment)
-            # Verify connected smartphone meets experiment requirements
+            apk_path = None
+            application = None
+            if experiment['application'] is not None:
+                apk_path = p.download_apk(tmp, experiment)
+                application = p.get_application(experiment)
             input('Connect the smartphone to the PiRogue and press [enter]: ')
-            application = p.get_application(experiment)
+            # Verify connected smartphone meets experiment requirements
             p.check_smartphone(adb, experiment)
             # Create a new session
             name = input('Enter the session name and press [enter]: ')
             session = p.create_session(experiment, name)
             # Set time and date of the smartphone
             adb.set_date_time()
-            # Install the application on the smartphone
-            adb.install(apk_path)
+            
+            if experiment['application'] is not None:
+              # Install the application on the smartphone
+                adb.install(apk_path)
             # Prepare tcpdump
             pcap_name = '%s.pcap' % session['id']
             pcap_path = os.path.join(tmp, pcap_name)
@@ -70,7 +75,8 @@ if __name__ == '__main__':
             mitmproxy.start()
             input('Install the CA by browsing http://mitm.it and press [enter] to run the application: ')
             # Start the application
-            adb.run(application['handle'])
+            if application is not None:
+                adb.run(application['handle'])
 
             # Wait until stop if received
             cmd = input('Type "stop" or "cancel" and press [enter]: ')
@@ -78,8 +84,9 @@ if __name__ == '__main__':
             tcpdump.stop()
             mitmproxy.stop()
             # Uninstall the application
-            adb.kill(application['handle'])
-            adb.uninstall(application['handle'])
+            if application is not None:
+                adb.kill(application['handle'])
+                adb.uninstall(application['handle'])
             if 'stop' in cmd:
                 # Upload files
                 p.upload_pcap(pcap_path, session)
