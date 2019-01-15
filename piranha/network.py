@@ -45,7 +45,7 @@ class MITMProxy:
         self.p_mitmproxy = None
 
     def start(self):
-        cmd = "mitmdump -z -T -w %s" % self.config.flow_output
+        cmd = "mitmdump --anticomp --mode transparent -w %s" % self.config.flow_output
         self.p_mitmproxy = sp.Popen(cmd, stdout = sp.PIPE, shell = True, preexec_fn = os.setsid)
         time.sleep(5)
 
