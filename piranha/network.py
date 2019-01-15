@@ -14,9 +14,10 @@ class TCPDumpConfig:
 
 
 class MITMProxyConfig:
-    def __init__(self, flow_output, port = 8080):
+    def __init__(self, flow_output, port = 8080, insecure=False):
         self.flow_output = flow_output
         self.port = port
+        self.insecure = insecure
 
 
 class TCPDump:
@@ -45,7 +46,8 @@ class MITMProxy:
         self.p_mitmproxy = None
 
     def start(self):
-        cmd = "mitmdump --anticomp --mode transparent -w %s" % self.config.flow_output
+        insecure_mode = "--ssl-insecure" if self.config.insecure else ""
+        cmd = "mitmdump --anticomp --mode transparent {insecure} -w {output}".format(output=self.config.flow_output, insecure=insecure_mode)
         self.p_mitmproxy = sp.Popen(cmd, stdout = sp.PIPE, shell = True, preexec_fn = os.setsid)
         time.sleep(5)
 

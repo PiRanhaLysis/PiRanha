@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     auth_token = config['DEFAULT']['token']
     network_interface = config['DEFAULT']['iface']
-
+    mitmproxy_insecure = config['DEFAULT'].get('mitmproxy_insecure', "false") == "true"
     p = PiRanha(config['DEFAULT']['host'], auth_token)
 
     adb = ADB(options.adb_path)
@@ -67,7 +67,7 @@ if __name__ == '__main__':
             # Prepare mitmproxy
             flow_name = '%s.flow' % session['id']
             flow_path = os.path.join(tmp, flow_name)
-            mitmproxy_configuration = MITMProxyConfig(flow_path)
+            mitmproxy_configuration = MITMProxyConfig(flow_path, insecure=mitmproxy_insecure)
             mitmproxy = MITMProxy(mitmproxy_configuration)
             # Start network capture
             p.start_tranparent_routing()
