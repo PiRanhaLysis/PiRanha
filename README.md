@@ -33,7 +33,10 @@ First of all, you have to create a configuration file `/usr/share/PiRanha/.confi
 host = http://localhost:8081
 token = my_PiPrecious_access_token
 iface = wlan1
+mitmproxy_insecure = true
 ```
+
+*mitmproxy_insecure* makes mitmproxy accept upstream TLS connections even if certificate is invalid or selfsigned
 
 ### Register a smartphone
 ```
