@@ -47,7 +47,7 @@ class MITMProxy:
 
     def start(self):
         insecure_mode = "--ssl-insecure" if self.config.insecure else ""
-        cmd = "mitmdump --anticomp --mode transparent {insecure} -w {output}".format(output=self.config.flow_output, insecure=insecure_mode)
+        cmd = "mitmdump --no-http2 --anticomp --mode transparent {insecure} -w {output}".format(output=self.config.flow_output, insecure=insecure_mode)
         self.p_mitmproxy = sp.Popen(cmd, stdout = sp.PIPE, shell = True, preexec_fn = os.setsid)
         time.sleep(5)
 
